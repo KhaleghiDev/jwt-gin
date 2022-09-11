@@ -1,19 +1,19 @@
 package main
 
 import (
-	"net/http"
-  	"github.com/gin-gonic/gin"
+	"github.com/KhaleghiDev/jwt-gin/controllers"
+	"github.com/KhaleghiDev/jwt-gin/models"
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
 
+	models.ConnectDataBase()
 	r := gin.Default()
-	
+
 	public := r.Group("/api")
 
-	public.POST("/register", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{"data": "this is the register endpoint!"})    
-	})
+	public.POST("/register", controllers.Register)
 
 	r.Run(":8080")
 
