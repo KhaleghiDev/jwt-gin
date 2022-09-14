@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	
 	"net/http"
 
 	"github.com/KhaleghiDev/jwt-gin/models"
@@ -29,20 +28,21 @@ func Register(c *gin.Context) {
 	u.Password = input.Password
 	u.Phone = input.Phone
 	u.Email = input.Email
+	_, err := u.SaveUser()
 
-	_,err := u.SaveUser()
-
-	if err != nil{
+	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"message":"registration success"})
+	c.JSON(http.StatusOK, gin.H{"message": "registration success"})
 }
+
 type LoginInput struct {
 	Username string `json:"username" binding:"required"`
 	Password string `json:"password" binding:"required"`
 }
-func Login(c *gin.Context){
+
+func Login(c *gin.Context) {
 	var input LoginInput
 
 	if err := c.ShouldBindJSON(&input); err != nil {
@@ -61,25 +61,24 @@ func Login(c *gin.Context){
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"token":token})
+	c.JSON(http.StatusOK, gin.H{"token": token})
 
 }
-func CurrentUser(c *gin.Context){
+func CurrentUser(c *gin.Context) {
 
 	user_id, err := token.ExtractTokenID(c)
-	
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-	
-	u,err := models.GetUserByID(user_id)
-	
+
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message":"success","data":u})
+	u, err := models.GetUserByID(user_id)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "success", "data": u})
 }
-

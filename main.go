@@ -13,7 +13,6 @@ func main() {
 	r := gin.Default()
 
 	public := r.Group("/api/v1")
-
 	public.POST("/register", controllers.Register)
 	public.POST("/login", controllers.Login)
 
@@ -24,8 +23,8 @@ func main() {
 	ticket := r.Group("/api/v1/admin/ticket")
 	ticket.Use(middlewares.JwtAuthMiddleware())
 	ticket.GET("/all", controllers.TicketAll)
-	ticket.GET("/show/:id", controllers.TicketShow)
-
+	ticket.POST("/create", controllers.TicketCreate)
+	ticket.GET("/filter", controllers.TicketShow)
 
 	r.Run(":8080")
 
