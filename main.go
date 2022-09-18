@@ -12,19 +12,18 @@ func main() {
 	models.ConnectDataBase()
 	r := gin.Default()
 
-	public := r.Group("/api/v1")
-	public.POST("/register", controllers.Register)
-	public.POST("/login", controllers.Login)
+	v1 := r.Group("/api/v1")
+	v1.POST("/register", controllers.Register)
+	v1.POST("/login", controllers.Login)
 
-	users := r.Group("/api/v1/admin")
-	users.Use(middlewares.JwtAuthMiddleware())
-	users.GET("/user", controllers.CurrentUser)
+	v1admin := r.Group("/api/v1/admin")
+	v1admin.Use(middlewares.JwtAuthMiddleware())
+	v1admin.GET("/user", controllers.CurrentUser)
 
-	ticket := r.Group("/api/v1/admin/ticket")
-	ticket.Use(middlewares.JwtAuthMiddleware())
-	ticket.GET("/all", controllers.TicketAll)
-	ticket.POST("/create", controllers.TicketCreate)
-	ticket.GET("/filter", controllers.TicketShow)
+	v1admin.Use(middlewares.JwtAuthMiddleware())
+	v1admin.GET("ticket/all", controllers.TicketAll)
+	v1admin.POST("ticket/create", controllers.TicketCreate)
+	v1admin.GET("ticket/filter", controllers.TicketShow)
 
 	r.Run(":8080")
 

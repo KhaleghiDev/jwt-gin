@@ -12,15 +12,15 @@ import (
 
 var DB *gorm.DB
 
-func ConnectDataBase(){
+func ConnectDataBase() {
 
 	err := godotenv.Load(".env")
 
 	if err != nil {
-	  log.Fatalf("Error loading .env file")
-	}	
-	
-	Dbdriver := os.Getenv("DB_DRIVER")
+		log.Fatalf("Error loading .env file")
+	}
+
+	DbDriver := os.Getenv("DB_DRIVER")
 	DbHost := os.Getenv("DB_HOST")
 	DbUser := os.Getenv("DB_USER")
 	DbPassword := os.Getenv("DB_PASSWORD")
@@ -28,16 +28,16 @@ func ConnectDataBase(){
 	DbPort := os.Getenv("DB_PORT")
 
 	DBURL := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local", DbUser, DbPassword, DbHost, DbPort, DbName)
-	
-	DB, err = gorm.Open(Dbdriver, DBURL)
+
+	DB, err = gorm.Open(DbDriver, DBURL)
 
 	if err != nil {
-		fmt.Println("Cannot connect to database ", Dbdriver)
+		fmt.Println("Cannot connect to database ", DbDriver)
 		log.Fatal("connection error:", err)
 	} else {
-		fmt.Println("We are connected to the database ", Dbdriver)
+		fmt.Println("We are connected to the database ", DbDriver)
 	}
 
 	DB.AutoMigrate(&User{})
-		
+	DB.AutoMigrate(&Ticket{})
 }
